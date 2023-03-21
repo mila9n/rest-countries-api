@@ -4,20 +4,29 @@ import { MagnifyingGlass } from "phosphor-react";
 import CountryCard from "./CountryCard";
 import { CountriesStyled } from "./style/Countries.styled";
 import ReactPaginate from "react-paginate";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  changePageNumber,
+  changeRegion,
+} from "../Redux/Reducer/CountriesReducer";
 
 const Countries = () => {
+  const region = useSelector((state) => state.countries.region);
+  const currentPage = useSelector((state) => state.countries.pageNumber);
+
   const [countries, setCountries] = React.useState([]);
-  const [option, setOption] = React.useState("");
   const [search, setSearch] = React.useState("");
   const [countryName, setCountryName] = React.useState("");
-  const [currentPage, setCurrentPage] = React.useState(0);
+  // const [, setCurrentPage] = React.useState(0);
   const [pagination, setPagination] = React.useState(true);
 
+  const dispatch = useDispatch();
+
   const newCountries = countries.filter((item) => {
-    if (option == "") {
+    if (region == "") {
       return item;
     } else {
-      return item.region == option;
+      return item.region == region;
     }
   });
 
@@ -43,10 +52,10 @@ const Countries = () => {
       ? countryName == ""
         ? countries
             .filter((item) => {
-              if (option == "") {
+              if (region == "") {
                 return item;
               } else {
-                return item.region == option;
+                return item.region == region;
               }
             })
             .slice(visitedCountries, visitedCountries + countriesPerPage)
@@ -57,7 +66,7 @@ const Countries = () => {
                   alt={item.flags.alt}
                   name={item.name.common}
                   capital={item.capital}
-                  population={item.population}
+                  population={item.population.toLocaleString()}
                   key={index}
                   region={item.region}
                   detail={item.name.common}
@@ -75,7 +84,7 @@ const Countries = () => {
                   alt={item.flags.alt}
                   name={item.name.common}
                   capital={item.capital}
-                  population={item.population}
+                  population={item.population.toLocaleString()}
                   region={item.region}
                   key={index}
                   detail={item.name.common}
@@ -88,8 +97,8 @@ const Countries = () => {
     setCountryName("");
     setSearch("");
     setPagination(true);
-    setCurrentPage(0);
-    setOption(e.target.value);
+    dispatch(changePageNumber({ number: 0 }));
+    dispatch(changeRegion({ region: e.target.value }));
   };
 
   const handleSearchChange = (e) => {
@@ -98,7 +107,7 @@ const Countries = () => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      setOption("");
+      dispatch(changeRegion({ region: "" }));
       setPagination(false);
       let country = search.split(" ");
       let newCountry = "";
@@ -119,7 +128,7 @@ const Countries = () => {
   };
 
   const handlePageChange = (e) => {
-    setCurrentPage(e.selected);
+    dispatch(changePageNumber({ number: e.selected }));
   };
 
   return (
@@ -139,7 +148,7 @@ const Countries = () => {
             />
           </div>
           <div className="regions">
-            <select onChange={handleOptionChange} value={option}>
+            <select onChange={handleOptionChange} value={region}>
               <option value="" hidden={true}>
                 Filter by Region
               </option>
@@ -159,14 +168,11 @@ const Countries = () => {
               nextLabel=">"
               previousLabel="<"
               pageCount={totalPages}
-              pageRangeDisplayed={2}
               onPageChange={handlePageChange}
               containerClassName={"paginationButtons"}
-              previousLinkClassName={"previousButton"}
-              nextLinkClassName={"nextButton"}
               activeClassName={"activeButton"}
-              disabledClassName={"disabledButton"}
               breakClassName={"breakButton"}
+              forcePage={currentPage}
             />
           </div>
         )}

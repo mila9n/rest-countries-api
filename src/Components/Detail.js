@@ -3,11 +3,18 @@ import { ContainerStyle } from "./style/Container.styled";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "phosphor-react";
 import { DetailStyle } from "./style/Detail.styled";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  changeRegion,
+  changePageNumber,
+} from "../Redux/Reducer/CountriesReducer";
 
 const Detail = () => {
   const [detail, setDetail] = React.useState("");
-  console.log(detail);
+  const region = useSelector((state) => state.countries.region);
+  const pageNumber = useSelector((state) => state.countries.pageNumber);
 
+  const dispatch = useDispatch();
   let params = useParams();
 
   React.useEffect(() => {
@@ -18,6 +25,8 @@ const Detail = () => {
 
   const navigate = useNavigate();
   const handleClick = () => {
+    dispatch(changeRegion({ region: region }));
+    dispatch(changePageNumber({ number: pageNumber }));
     navigate(-1);
   };
 
@@ -59,7 +68,9 @@ const Detail = () => {
                     </p>
                     <p>
                       Population:{" "}
-                      <span className="text2">{detail[0].population}</span>
+                      <span className="text2">
+                        {detail[0].population.toLocaleString()}
+                      </span>
                     </p>
                     <p>
                       Region: <span className="text2">{detail[0].region}</span>
