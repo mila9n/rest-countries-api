@@ -3,12 +3,27 @@ import { ContainerStyle } from "./style/Container.styled";
 import { MagnifyingGlass } from "phosphor-react";
 import CountryCard from "./CountryCard";
 import { CountriesStyled } from "./style/Countries.styled";
+import ReactPaginate from "react-paginate";
 
 const Countries = () => {
   const [countries, setCountries] = React.useState([]);
   const [option, setOption] = React.useState("");
   const [search, setSearch] = React.useState("");
   const [countryName, setCountryName] = React.useState("");
+  const [currentPage, setCurrentPage] = React.useState(0);
+  const [pagination, setPagination] = React.useState(true);
+
+  const newCountries = countries.filter((item) => {
+    if (option == "") {
+      return item;
+    } else {
+      return item.region == option;
+    }
+  });
+
+  const countriesPerPage = 12;
+  const visitedCountries = currentPage * countriesPerPage;
+  const totalPages = Math.ceil(newCountries.length / countriesPerPage);
 
   React.useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
@@ -19,6 +34,7 @@ const Countries = () => {
   React.useEffect(() => {
     if (search == "") {
       setCountryName("");
+      setPagination(true);
     }
   }, [search]);
 
@@ -33,6 +49,7 @@ const Countries = () => {
                 return item.region == option;
               }
             })
+            .slice(visitedCountries, visitedCountries + countriesPerPage)
             .map((item, index) => {
               return (
                 <CountryCard
@@ -70,6 +87,8 @@ const Countries = () => {
   const handleOptionChange = (e) => {
     setCountryName("");
     setSearch("");
+    setPagination(true);
+    setCurrentPage(0);
     setOption(e.target.value);
   };
 
@@ -80,6 +99,7 @@ const Countries = () => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       setOption("");
+      setPagination(false);
       let country = search.split(" ");
       let newCountry = "";
       for (let name of country) {
@@ -96,6 +116,10 @@ const Countries = () => {
     } else {
       return;
     }
+  };
+
+  const handlePageChange = (e) => {
+    setCurrentPage(e.selected);
   };
 
   return (
@@ -129,6 +153,23 @@ const Countries = () => {
           </div>
         </div>
         <div className="countries__cards">{CountriesArr}</div>
+        {pagination && (
+          <div className="pagination">
+            <ReactPaginate
+              nextLabel=">"
+              previousLabel="<"
+              pageCount={totalPages}
+              pageRangeDisplayed={2}
+              onPageChange={handlePageChange}
+              containerClassName={"paginationButtons"}
+              previousLinkClassName={"previousButton"}
+              nextLinkClassName={"nextButton"}
+              activeClassName={"activeButton"}
+              disabledClassName={"disabledButton"}
+              breakClassName={"breakButton"}
+            />
+          </div>
+        )}
       </ContainerStyle>
     </CountriesStyled>
   );

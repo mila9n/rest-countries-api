@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 const CountryCard = (props) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleBackClick = () => {
     navigate(`/${props.detail}`);
   };
 
   return (
-    <CountryCardStyle onClick={handleClick}>
+    <CountryCardStyle onClick={handleBackClick}>
       <img src={props.img} alt={props.alt} />
       <div className="info">
         <h3>{props.name}</h3>

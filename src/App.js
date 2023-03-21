@@ -17,6 +17,8 @@ function App() {
       boxshadow: darkTheme ? "#212020" : "lightgray",
       text1: darkTheme ? "#fff" : "#000",
       text2: darkTheme ? "rgba(255, 255, 255,0.6)" : "gray",
+      oppositeBg: darkTheme ? "#fff" : "#2b3743",
+      oppositeTxt: darkTheme ? "#2b3743" : "#fff",
     },
   };
 
