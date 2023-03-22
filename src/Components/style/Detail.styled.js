@@ -60,8 +60,9 @@ export const DetailStyle = styled.div`
   .border {
     font-size: 14px;
     margin-top: 50px;
+    width: 100%;
     display: flex;
-    /* align-items: center; */
+    align-items: center;
     justify-content: space-between;
   }
 

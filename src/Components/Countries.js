@@ -1,7 +1,8 @@
 import React from "react";
 import { ContainerStyle } from "./style/Container.styled";
-import { MagnifyingGlass } from "phosphor-react";
 import CountryCard from "./CountryCard";
+import SearchBer from "./SearchBar";
+import Filter from "./Filter";
 import { CountriesStyled } from "./style/Countries.styled";
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +10,7 @@ import {
   changePageNumber,
   changeRegion,
 } from "../Redux/Reducer/CountriesReducer";
+import { useNavigate } from "react-router-dom";
 
 const Countries = () => {
   const region = useSelector((state) => state.countries.region);
@@ -17,8 +19,8 @@ const Countries = () => {
   const [countries, setCountries] = React.useState([]);
   const [search, setSearch] = React.useState("");
   const [countryName, setCountryName] = React.useState("");
-  // const [, setCurrentPage] = React.useState(0);
   const [pagination, setPagination] = React.useState(true);
+  const [searchedList, setSearchedList] = React.useState([]);
 
   const dispatch = useDispatch();
 
@@ -42,8 +44,22 @@ const Countries = () => {
 
   React.useEffect(() => {
     if (search == "") {
+      setSearchedList([]);
       setCountryName("");
       setPagination(true);
+    }
+    const newCountry =
+      search == ""
+        ? setSearchedList([])
+        : countries.filter((country) => {
+            return country.name.common
+              .toLowerCase()
+              .includes(search.toLowerCase());
+          });
+    if (search == "") {
+      return;
+    } else {
+      setSearchedList(newCountry);
     }
   }, [search]);
 
@@ -131,36 +147,25 @@ const Countries = () => {
     dispatch(changePageNumber({ number: e.selected }));
   };
 
+  const navigate = useNavigate();
+  const handleSearchedCountryClick = (e) => {
+    navigate(`/${e.target.id}`);
+  };
+
   return (
     <CountriesStyled>
       <ContainerStyle>
         <div className="filters">
-          <div className="search">
-            <span className="search__symbol">
-              <MagnifyingGlass size={16} />
-            </span>
-            <input
-              type="text"
-              onChange={handleSearchChange}
-              onKeyDown={handleKeyDown}
-              value={search}
-              placeholder="Search for a country..."
-            />
-          </div>
-          <div className="regions">
-            <select onChange={handleOptionChange} value={region}>
-              <option value="" hidden={true}>
-                Filter by Region
-              </option>
-              <option value="Africa">Africa</option>
-              <option value="Americas">America</option>
-              <option value="Asia">Asia</option>
-              <option value="Europe">Europe</option>
-              <option value="Oceania">Oceania</option>
-              <option value="">All</option>
-            </select>
-          </div>
+          <SearchBer
+            handleSearchChange={handleSearchChange}
+            handleKeyDown={handleKeyDown}
+            search={search}
+            handleSearchedCountryClick={handleSearchedCountryClick}
+            searchedList={searchedList}
+          />
+          <Filter handleOptionChange={handleOptionChange} region={region} />
         </div>
+
         <div className="countries__cards">{CountriesArr}</div>
         {pagination && (
           <div className="pagination">
