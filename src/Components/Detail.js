@@ -18,10 +18,15 @@ const Detail = () => {
   let params = useParams();
 
   React.useEffect(() => {
-    fetch(`https://restcountries.com/v3.1/name/${params.CountryName}`).then(
-      (res) => res.json().then((data) => setDetail(data))
-    );
+    fetch(`https://restcountries.com/v3.1/name/${params.CountryName}`)
+      .then((res) => res.json())
+      .then((data) => {
+        params.CountryName === "India"
+          ? setDetail([data[1]])
+          : setDetail([data[0]]);
+      });
   }, [params]);
+  // console.log(detail);
 
   const navigate = useNavigate();
   const handleClick = () => {
