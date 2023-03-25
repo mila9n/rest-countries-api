@@ -109,8 +109,12 @@ const Detail = () => {
                   <span className="border-countries">
                     {}
                     {hasKey ? (
-                      detail[0].borders.map((item) => {
-                        return <span className="border-country">{item}</span>;
+                      detail[0].borders.map((item, index) => {
+                        return (
+                          <span className="border-country" key={index}>
+                            {item}
+                          </span>
+                        );
                       })
                     ) : (
                       <span className="text2">No border country</span>

@@ -173,6 +173,8 @@ const Countries = () => {
               nextLabel=">"
               previousLabel="<"
               pageCount={totalPages}
+              pageRangeDisplayed={2}
+              marginPagesDisplayed={2}
               onPageChange={handlePageChange}
               containerClassName={"paginationButtons"}
               activeClassName={"activeButton"}
