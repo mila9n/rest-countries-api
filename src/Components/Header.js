@@ -8,7 +8,7 @@ const Header = () => {
   const { setDarkTheme } = useContext(ThemeContext);
 
   const handleClick = () => {
-    setDarkTheme((prev) => (prev == false ? true : false));
+    setDarkTheme((prev) => (prev === false ? true : false));
   };
 
   return (

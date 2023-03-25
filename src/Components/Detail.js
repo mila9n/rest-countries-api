@@ -21,7 +21,7 @@ const Detail = () => {
     fetch(`https://restcountries.com/v3.1/name/${params.CountryName}`).then(
       (res) => res.json().then((data) => setDetail(data))
     );
-  }, []);
+  }, [params]);
 
   const navigate = useNavigate();
   const handleClick = () => {
@@ -32,15 +32,18 @@ const Detail = () => {
 
   let moneyname = "";
   let languages = "";
+  let nativeName1 = "";
 
-  if (detail == "") {
+  if (detail === "") {
     return;
   } else {
     let money = Object.values(detail[0].currencies);
     let language = Object.values(detail[0].languages);
     let moneyName = Object.values(money[0]);
+    let nativeName2 = Object.values(detail[0].name.nativeName);
     moneyname = moneyName[0];
     languages = language;
+    nativeName1 = Object.values(nativeName2[0]);
   }
 
   const hasKey = "borders" in detail[0];
@@ -55,7 +58,7 @@ const Detail = () => {
         {detail === "" ? null : (
           <div className="details">
             <div>
-              <img src={detail[0].flags.svg} />
+              <img src={detail[0].flags.svg} alt={detail[0].flags.alt} />
             </div>
             <div>
               <div>
@@ -64,7 +67,7 @@ const Detail = () => {
                   <div>
                     <p>
                       Native Name:
-                      <span className="text2">{detail[0].altSpellings[1]}</span>
+                      <span className="text2">{nativeName1[0]}</span>
                     </p>
                     <p>
                       Population:{" "}
@@ -95,7 +98,7 @@ const Detail = () => {
                     <p>
                       Languages:
                       <span className="text2">
-                        {detail == ""
+                        {detail === ""
                           ? null
                           : languages.map((item) => {
                               return item + ",";

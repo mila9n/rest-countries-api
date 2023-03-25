@@ -9,7 +9,7 @@ const SearchBer = (props) => {
       onClick={props.handleSearchedCountryClick}
       id={item.name.common}
     >
-      <img src={item.flags.svg} />
+      <img src={item.flags.svg} alt={item.flags.alt} />
       {item.name.common}
     </div>
   ));
@@ -25,7 +25,7 @@ const SearchBer = (props) => {
         value={props.search}
         placeholder="Search for a country..."
       />
-      {props.search == "" ? null : (
+      {props.search === "" ? null : (
         <div className="searchedList">{newList}</div>
       )}
     </SearchBarStyle>

@@ -25,10 +25,10 @@ const Countries = () => {
   const dispatch = useDispatch();
 
   const newCountries = countries.filter((item) => {
-    if (region == "") {
+    if (region === "") {
       return item;
     } else {
-      return item.region == region;
+      return item.region === region;
     }
   });
 
@@ -43,35 +43,35 @@ const Countries = () => {
   }, []);
 
   React.useEffect(() => {
-    if (search == "") {
+    if (search === "") {
       setSearchedList([]);
       setCountryName("");
       setPagination(true);
     }
     const newCountry =
-      search == ""
+      search === ""
         ? setSearchedList([])
         : countries.filter((country) => {
             return country.name.common
               .toLowerCase()
               .includes(search.toLowerCase());
           });
-    if (search == "") {
+    if (search === "") {
       return;
     } else {
       setSearchedList(newCountry);
     }
-  }, [search]);
+  }, [search, countries]);
 
   const CountriesArr =
     countries.length > 0
-      ? countryName == ""
+      ? countryName === ""
         ? countries
             .filter((item) => {
-              if (region == "") {
+              if (region === "") {
                 return item;
               } else {
-                return item.region == region;
+                return item.region === region;
               }
             })
             .slice(visitedCountries, visitedCountries + countriesPerPage)
@@ -91,7 +91,7 @@ const Countries = () => {
             })
         : countries
             .filter((item) => {
-              return item.name.common == countryName;
+              return item.name.common === countryName;
             })
             .map((item, index) => {
               return (
